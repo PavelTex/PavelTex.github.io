@@ -101,12 +101,20 @@
     });
 
     order.addEventListener("click",() => {
+        let name = document.getElementById("user_name").value;
+        let name = document.getElementById("user_email").value;
+        let name = document.getElementById("user_phone").value;
         tg.close();
 
+        let data = {
+            name: name,
+            email: email,
+            phone: phone
+        }
+        tg.sendData(JSON.stringify(data));
     });
 
 
 </script>
 </body>
 </html>
-
