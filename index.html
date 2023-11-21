@@ -75,21 +75,25 @@
      <p>Набор настольной игры "Грань"</p>
      <button id="buy">Купить</button>
  </div>
- <form is="form">
-	 <input type="text" placeholder="Имя" id="user_name">
+ <div>
+     <p>Заполните форму, чтобы менеджер мог подтвердить заказ</p>
+     <form is="form">
+         <input type="text" placeholder="Имя" id="user_name">
          <input type="number" placeholder="Номер" id="user_number">
          <input type="email" placeholder="Почта" id="user_email">
-</form>
+         <button id="order">Оформить</button>
+     </form>
+ </div>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
 		let tg = window.Telegram.WebApp;
-		let bth1 = document.getElementById("buy");
+		let buy = document.getElementById("buy");
 		let order = document.getElementById("order");
 
 		buy.addEventListener("click", () => {
-        document.getElementById("menu").style.display = "none";
-        document.getElementById("form").style.display = "block";
-        document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("form").style.display = "block";
+            document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
 		})
 
 		order.addEventListener("click",() => {
