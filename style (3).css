@@ -26,7 +26,6 @@ body {
 
 .btn {
 	display: block;
-	margin: auto;
 	padding: 10px 20px;
 	border: none;
 	background: rgb(248, 168, 24);
@@ -35,6 +34,9 @@ body {
 	text-transform: uppercase;
 	font-weight: 700;
 	text-align: center;
+	 width: 70px;
+	margin-left: auto;
+	margin-right: auto;
 
 	transition: background .2s linear;
 }
