@@ -12,8 +12,8 @@ body {
 
 .inner {
 	display: grid;
-	grid-template-columns: 1fr;
-	grid-template-rows: 200px 200px;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 200px 200px 200px;
 }
 
 .img {
@@ -33,12 +33,10 @@ body {
 	color: #fff;
 	text-transform: uppercase;
 	font-weight: 700;
+
 	transition: background .2s linear;
-		
 }
-.imgButton{
-    text-align:center;
-}
+
 .btn:hover {
 	background: lightgreen;
 }
@@ -46,9 +44,6 @@ body {
 .usercard {
 	text-align: center;
 }
-
-
-
 
 
 
