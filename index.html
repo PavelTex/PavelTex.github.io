@@ -15,27 +15,23 @@
 					<img src="1.png.png" alt="" class="img">
 					<button class="btn" id="btn2">Add</button>
 				</div>
+				<form id="form">
+					<input type="text" placeholder="Имя" id ="user_name">
+					<input type="text" placeholder="Email" id ="user_email">
+					<input type="text" placeholder="Телефон" id ="user_phone">
+					<button id="order">Оформить</button>
+				</form>
 			</div>
 		</div>
 	</div>
-	<div class="usercard" id="usercard">
-		
-	</div>
-	<form id="form">
-      <input type="text" placeholder="Имя" id ="user_name">
-      <input type="text" placeholder="Email" id ="user_email">
-      <input type="text" placeholder="Телефон" id ="user_phone">
-      <button id="order">Оформить</button>
-	</form>
-
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
     let tg = window.Telegram.WebApp;
-    let buy = document.getElementById("bth1");
+    let bth1 = document.getElementById("bth1");
     let order = document.getElementById("order");
     tg.expand();
 
-    buy.addEventListener("click", () => {
+    bth1.addEventListener("click", () => {
         document.getElementById("main").style.display = "none";
         document.getElementById("form").style.display = "block";
         document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
