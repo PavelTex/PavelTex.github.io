@@ -73,7 +73,7 @@
      <h1>Онлайн магазин</h1>
      <img src="1.png.png">
      <p>Набор настольной игры "Грань"</p>
-     <button id="Купить">Купить</button>
+     <button id="buy">Купить</button>
  </div>
  <div>
      <p>Заполните форму, чтобы менеджер мог подтвердить заказ</p>
@@ -86,11 +86,11 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
 		let tg = window.Telegram.WebApp;
-		let bth1 = document.getElementById("bth1");
+		let bth1 = document.getElementById("buy");
 		let order = document.getElementById("order");
 
 		bth1.addEventListener("click", () => {
-        document.getElementById("main").style.display = "none";
+        document.getElementById("menu").style.display = "none";
         document.getElementById("form").style.display = "block";
         document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
 		})
