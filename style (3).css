@@ -18,6 +18,8 @@ body {
 
 .img {
 	width: 150px;
+	display: block;
+	margin: auto;
 }
 
 .item {
@@ -25,7 +27,8 @@ body {
 }
 
 .btn {
-	display: inline-block;
+	display: block;
+	margin: auto;
 	padding: 10px 20px;
 	border: none;
 	background: rgb(248, 168, 24);
