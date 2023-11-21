@@ -83,30 +83,26 @@
          <input type="email" placeholder="Почта" id="user_email">
      </form>
  </div>
-	<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
-    let tg = window.Telegram.WebApp;
-    let bth1 = document.getElementById("bth1");
-    let order = document.getElementById("order");
+		let tg = window.Telegram.WebApp;
+		let bth1 = document.getElementById("bth1");
+		let order = document.getElementById("order");
 
-    bth1.addEventListener("click", () => {
+		bth1.addEventListener("click", () => {
         document.getElementById("main").style.display = "none";
         document.getElementById("form").style.display = "block";
         document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
-    });
+		})
 
-    order.addEventListener("click",() => {
-        let name = document.getElementById("user_name").value;
-        let email = document.getElementById("user_email").value;
-        let phone = document.getElementById("user_phone").value;
+		order.addEventListener("click",() => {
+            let name = document.getElementById("user_name").value;
+            let email = document.getElementById("user_email").value;
+            let phone = document.getElementById("user_phone").value;
 
         tg.close();
-    });
+
+		});
 	</script>
-
-
-
-
-
 </body>
 </html>
