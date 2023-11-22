@@ -83,10 +83,7 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-	 <button type="buttont"
-		 class = "bth bth-primary"
-		 id="order"
-		 onClick="submit()">Оформить</button>
+	 <button type="submit" id ="order">Оформить</button>
  </form>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 	<script>
@@ -111,6 +108,8 @@
 	</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
+		document.getElementById("order")[0].type = "button";
+	
 		let tg = window.Telegram.WebApp;
 		let buy = document.getElementById("buy");
 		let order = document.getElementById("order");	
