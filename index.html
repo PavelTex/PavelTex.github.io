@@ -83,31 +83,29 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-         <button id="order">Оформить</button>
+         <button type='submit' id="order">Оформить</button>
  </form>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
- <script>
-   const TOKEN ="6662719288:AAHrU_JHU3WF2CqWggsAtVHjaJ10AHr2KFc";
-   const CHAT_ID ="-1002094160959";
-   const URI_API `https://api.telegram.org/bot${ TOKEN }/sendMessage`;
+    <script>
+        const TOKEN ="6662719288:AAHrU_JHU3WF2CqWggsAtVHjaJ10AHr2KFc";
+        const CHAT_ID ="-1002094160959";
+        const URI_API =`https://api.telegram.org/bot${ TOKEN }/sendMessage`;
 
-   document.getElementById("form").addEventListener("order",function (e){
-     e.preventDefault();
+        document.getElementById("form").addEventListener("submit",function(e) {
+          e.preventDefault();
 
-     let message = `<b>Заказ из бота</b>\n`
-     message += `<b>Отправитель: </b> ${ this.name.value }\n`;
-     message += `<b>Отправитель: </b> ${ this.phone.value }\n`;
-     message += `<b>Отправитель: </b> ${ this.email.value }`;
+          let message = `<b>Заказ из бота</b>\n`
+          message += `<b>Отправитель: </b> ${ this.name.value }\n`;
+          message += `<b>Номер телефона: </b> ${ this.phone.value }\n`;
+          message += `<b>Почта: </b> ${ this.email.value }`;
 
-     axios.post(URI_API,{
-       chat_id: CHAT_ID,
-       parse_mode: 'html',
-       text: message
-     })
-
-
-   })
- </script>
+          axios.post(URI_API,{
+            chat_id: CHAT_ID,
+            parse_mode: 'html',
+            text: message
+          })
+        })
+     </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
 		let tg = window.Telegram.WebApp;
@@ -117,7 +115,6 @@
 		buy.addEventListener("click", () => {
             document.getElementById("menu").style.display = "none";
             document.getElementById("form").style.display = "block";
-            document.getElementById("user_name").value = tg.initDataUnsafe.user.first_name
 		})
 
 		order.addEventListener("click",() => {
