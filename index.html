@@ -83,7 +83,8 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-	 <button type="submit" id="order">Оформить</button>
+	 <button type="submit" "id="order">Оформить</button>
+	 <button id = "back">Назад</button>
          
 
 
@@ -114,6 +115,7 @@
 		let tg = window.Telegram.WebApp;
 		let buy = document.getElementById("buy");
 		let order = document.getElementById("order");
+		let back = document.getElementById("back);
 		
 
 		buy.addEventListener("click", () => {
@@ -121,7 +123,7 @@
             document.getElementById("form").style.display = "block";
 		});
 
-		order.addEventListener("click",() => {
+		back.addEventListener("click",() => {
 			tg.close();
 		});
 	</script>
