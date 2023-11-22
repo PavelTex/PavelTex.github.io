@@ -83,7 +83,7 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-	 <button id ="order">Оформить</button>
+	 <button type="submit" id="order">Оформить</button>
  </form>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 	<script>
@@ -91,7 +91,7 @@
         const CHAT_ID ="-1002094160959";
         const URI_API =`https://api.telegram.org/bot${ TOKEN }/sendMessage`;
 
-        $('#form button id="order"').click(function(e) {
+        document.getElementById("form").addEventListener("submit",function(e) {
           e.preventDefault();
 
           let message = `<b>Заказ из бота</b>\n`
@@ -117,8 +117,7 @@
             document.getElementById("menu").style.display = "none";
             document.getElementById("form").style.display = "block";
 		});
-		
-		order.addEventListener("click",() => {
+	    document.getElementById("order).addEventListener("click",() => {
 			tg.close();
 		});
 	</script>
