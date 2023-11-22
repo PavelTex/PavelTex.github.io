@@ -31,9 +31,9 @@
             width: 350px;
             margin: 0 auto;
         }
-	img {
-	width: 200px;
-	}
+        img {
+            width: 150px;
+        }
         button {
             border: 0;
             border-radius: 5px;
@@ -80,11 +80,34 @@
  </div>
  <form id="form">
          <p>Заполните форму, чтобы менеджер мог подтвердить заказ</p>
-         <input type="text" placeholder="Имя" id="user_name">
-         <input type="number" placeholder="Номер" id="user_number">
-         <input type="email" placeholder="Почта" id="user_email">
+         <input type="text" placeholder="Имя" id="user_name" name="name">
+         <input type="number" placeholder="Номер" id="user_number" name="phone">
+         <input type="email" placeholder="Почта" id="user_email" name="email">
          <button id="order">Оформить</button>
  </form>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script>
+   const TOKEN ="6857180175:AAG5z0PiFmLotkmA-dYli3_iEDdEF2c3g48";
+   const CHAT_ID ="-1002094160959";
+   const URI_API `https://api.telegram.org/bot${ TOKEN }/sendMessage`;
+
+   document.getElementById("tg").addEventListener("submit",function (e){
+     e.preventDefault();
+
+     let message = `<b>Заказ из бота</b>\n`
+     message += `<b>Отправитель: </b> ${ this.name.value }\n`;
+     message += `<b>Отправитель: </b> ${ this.phone.value }\n`;
+     message += `<b>Отправитель: </b> ${ this.email.value }`;
+
+     axios.post(URI_API,{
+       chat_id: CHAT_ID,
+       parse_mode: 'html',
+       text: message
+     })
+
+
+   })
+ </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 	<script>
 		let tg = window.Telegram.WebApp;
@@ -98,18 +121,6 @@
 		})
 
 		order.addEventListener("click",() => {
-            let name = document.getElementById("user_name").value;
-            let email = document.getElementById("user_email").value;
-            let phone = document.getElementById("user_number").value;
-
-            let data = {
-              name: name,
-              email: email,
-              phone: phone
-            }
-
-            tg.sendData(JSON.stringify(data));
-
             tg.close();
 		});
 	</script>
