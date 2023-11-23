@@ -83,7 +83,6 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-	 <button id="back">Назад</button>
 	 <button types="submit">Оформить</button>
 	 
 	 
@@ -107,6 +106,9 @@
             parse_mode: 'html',
             text: message
           })
+	  .then((res) =>
+		  tg.close();
+		  
         })
 	</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -119,9 +121,6 @@
 		buy.addEventListener("click", () => {
             document.getElementById("menu").style.display = "none";
             document.getElementById("form").style.display = "block";
-		});
-	    back.addEventListener("click",() => {
-			tg.close();
 		});
 	</script>
 </body>
