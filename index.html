@@ -84,7 +84,8 @@
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
 	 <button types="submit">Оформить</button>
-	 
+
+	 <div id="success" class ="alert alert-success" role="alert"></div>
 	 
  </form>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
@@ -92,6 +93,7 @@
         const TOKEN ="6662719288:AAHrU_JHU3WF2CqWggsAtVHjaJ10AHr2KFc";
         const CHAT_ID ="-1002094160959";
         const URI_API =`https://api.telegram.org/bot${ TOKEN }/sendMessage`;
+	const success = document.getElementById("success");
 
         document.getElementById("form").addEventListener("submit",function(e) {
           e.preventDefault();
@@ -105,7 +107,11 @@
             chat_id: CHAT_ID,
             parse_mode: 'html',
             text: message
-          })	  
+          })	
+	   .then((res) =>{
+		   success.innerHTML="Сообщение отправлено!"; 
+		   success.style.display = "block";  
+	   })	
         })
 	</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
