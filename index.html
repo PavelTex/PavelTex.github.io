@@ -17,6 +17,12 @@
             color: var(--tg-theme-text-color);
             background: var(--tg-theme-bg-color);
         }
+	#menu1{
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            display: block;
+        }
         #menu{
             width: 100%;
             padding: 20px;
@@ -128,11 +134,16 @@
 		buy.addEventListener("click", () => {
             document.getElementById("menu").style.display = "none";
             document.getElementById("form").style.display = "block";
+	    document.getElementById("menu1").style.display = "none";
 		});
 		of.addEventListener("click", () =>{
 	    document.getElementById("form").style.display = "none";
 	    document.getElementById("menu1").style.display = "block";
 		});
+		go.addEventListener("click", () =>{
+	    tg.close();
+		});
+		
 	</script>
 </body>
 </html>
