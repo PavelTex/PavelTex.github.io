@@ -83,7 +83,7 @@
          <input type="text" placeholder="Имя" id="user_name" name="name">
          <input type="number" placeholder="Номер" id="user_number" name="phone">
          <input type="email" placeholder="Почта" id="user_email" name="email">
-	 <button types="submit">Оформить</button>
+	 <button id='of' types="submit">Оформить</button>
 
 	 <div id="success" class ="alert alert-success" role="alert"></div>
 	 
@@ -124,6 +124,9 @@
 		buy.addEventListener("click", () => {
             document.getElementById("menu").style.display = "none";
             document.getElementById("form").style.display = "block";
+		});
+		of.addEventListaner("click", () =>{
+	    document.getElementById("form").style.display = "none";	
 		});
 	</script>
 </body>
