@@ -88,6 +88,10 @@
 	 <div id="success" class ="alert alert-success" role="alert"></div>
 	 
  </form>
+<div id="menu1">
+     <h1>Онлайн магазин</h1>
+     <button id="go">Вернуться в бота</button>
+ </div>
 <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 	<script>
         const TOKEN ="6662719288:AAHrU_JHU3WF2CqWggsAtVHjaJ10AHr2KFc";
@@ -126,7 +130,8 @@
             document.getElementById("form").style.display = "block";
 		});
 		of.addEventListener("click", () =>{
-	    tg.close();
+	    document.getElementById("form").style.display = "none";
+	    document.getElementById("menu1").style.display = "block";
 		});
 	</script>
 </body>
