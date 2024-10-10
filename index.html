@@ -41,9 +41,30 @@
         button:active {
             background-color: #003d80;
         }
-        .timer {
-            font-size: 20px;
-            margin-top: 20px;
+        .timer-container {
+            width: 300px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 25px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .timer-fill {
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 25px;
+            transition: width 1s linear;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .timer-text {
+            position: relative;
+            z-index: 1;
+            color: black;
+            font-size: 18px;
+            line-height: 30px;
         }
         .result {
             margin-top: 30px;
@@ -71,6 +92,13 @@
             display: inline-block;
             margin: 20px auto;
         }
+        .end-game-btn {
+            background-color: #dc3545;
+            margin-top: 20px;
+        }
+        .end-game-btn:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -89,10 +117,14 @@
 </div>
 
 <div id="game" style="display:none;">
-    <div class="timer">Осталось времени: <span id="time">60</span> секунд</div>
+    <div class="timer-container">
+        <div class="timer-fill" id="timer-fill" style="width: 100%;"></div>
+        <div class="timer-text" id="timer-text">60</div> <!-- Отображение времени над заливкой -->
+    </div>
     <div class="question" id="question"></div>
     <div class="options" id="options"></div>
     <div class="result" id="result"></div>
+    <button class="end-game-btn" onclick="endGame(true)">Завершить игру</button>
 </div>
 
 <div id="game-over" class="game-over" style="display:none;">
@@ -105,6 +137,7 @@
     let totalQuestions = 0;
     let timeLeft = 60;
     let selectedOperations = [];
+    let timerInterval;
 
     // Генерация случайного целого числа
     function getRandomInt(min, max) {
@@ -182,23 +215,52 @@
         totalQuestions++;
     }
 
-    // Таймер обратного отсчета
+    // Таймер обратного отсчета с изменением ширины полоски и отображением времени
     function startTimer() {
-        let timerInterval = setInterval(() => {
+        const timerFill = document.getElementById('timer-fill');
+        const timerText = document.getElementById('timer-text');
+        let initialWidth = 100; // Ширина полоски в процентах
+        let intervalTime = 1000; // Интервал в 1 секунду
+
+        timerInterval = setInterval(() => {
             timeLeft--;
-            document.getElementById('time').textContent = timeLeft;
+            initialWidth = (timeLeft / 60) * 100;
+            timerFill.style.width = `${initialWidth}%`;
+            timerText.textContent = timeLeft; // Обновление отображаемого времени
+
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                endGame();
+                endGame(false);
             }
-        }, 1000);
+        }, intervalTime);
     }
 
     // Завершение игры
-    function endGame() {
+    function endGame(manualEnd) {
+        clearInterval(timerInterval);
         document.getElementById('game').style.display = 'none';
         document.getElementById('game-over').style.display = 'block';
-        document.getElementById('final-result').textContent = `Игра окончена! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
+        if (manualEnd) {
+            document.getElementById('final-result').textContent = `Вы завершили игру! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
+        } else {
+            document.getElementById('final-result').textContent = `Игра окончена! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
+        }
+    }
+
+    // Запуск игры
+    function startGame() {
+        selectedOperations = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+        if (selectedOperations.length === 0) {
+            alert('Пожалуйста, выберите хотя бы одну операцию!');
+            return;
+        }
+        correctAnswers = 0;
+        totalQuestions = 0;
+        timeLeft = 60;  // Сбрасываем время на 60 секунд
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        generateQuestion();
+        startTimer();
     }
 
     // Начать игру
