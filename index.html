@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математические Примеры</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f0f0f0;
+            transition: background-color 0.5s ease;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .question {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-top: 20px;
+        }
+        button {
+            padding: 15px 25px;
+            margin: 10px 0;
+            width: 200px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        button:active {
+            background-color: #003d80;
+        }
+        .timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+        .operation-select {
+            margin: 10px;
+            font-size: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .game-over {
+            margin-top: 30px;
+        }
+        #menu, #game, #game-over {
+            border-radius: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: inline-block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Математические Примеры</h1>
+
+<div id="menu">
+    <h2>Выберите математические операции</h2>
+    <div class="operation-select">
+        <label><input type="checkbox" value="+" checked> Сложение (+)</label>
+        <label><input type="checkbox" value="-"> Вычитание (-)</label>
+        <label><input type="checkbox" value="*"> Умножение (*)</label>
+        <label><input type="checkbox" value="/"> Деление (/)</label>
+    </div>
+    <button onclick="startGame()">Начать игру</button>
+</div>
+
+<div id="game" style="display:none;">
+    <div class="timer">Осталось времени: <span id="time">60</span> секунд</div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<div id="game-over" class="game-over" style="display:none;">
+    <div id="final-result"></div>
+    <button onclick="restartGame()">Играть снова</button>
+</div>
+
+<script>
+    let correctAnswers = 0;
+    let totalQuestions = 0;
+    let timeLeft = 60;
+    let selectedOperations = [];
+
+    // Генерация случайного целого числа
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Генерация нового примера
+    function generateQuestion() {
+        let num1 = getRandomInt(1, 10);
+        let num2 = getRandomInt(1, 10);
+        let operation = getRandomOperation();
+        let correctAnswer;
+
+        switch (operation) {
+            case '+':
+                correctAnswer = num1 + num2;
+                break;
+            case '-':
+                correctAnswer = num1 - num2;
+                break;
+            case '*':
+                correctAnswer = num1 * num2;
+                break;
+            case '/':
+                num1 = num1 * num2; // Делаем num1 кратным num2
+                correctAnswer = num1 / num2;
+                break;
+        }
+
+        let questionText = `${num1} ${operation} ${num2} = ?`;
+        document.getElementById('question').textContent = questionText;
+
+        let options = [];
+        options.push(correctAnswer);
+
+        // Генерация неверных вариантов
+        while (options.length < 4) {
+            let wrongAnswer = getRandomInt(correctAnswer - 10, correctAnswer + 10);
+            if (!options.includes(wrongAnswer)) {
+                options.push(wrongAnswer);
+            }
+        }
+
+        // Перемешивание вариантов
+        options.sort(() => Math.random() - 0.5);
+
+        // Отображение вариантов ответа стопкой
+        let optionsHtml = '';
+        options.forEach(option => {
+            optionsHtml += `<button onclick="checkAnswer(${option}, ${correctAnswer})">${option}</button><br>`;
+        });
+        document.getElementById('options').innerHTML = optionsHtml;
+    }
+
+    // Получение случайной операции из выбранных пользователем
+    function getRandomOperation() {
+        const randomIndex = Math.floor(Math.random() * selectedOperations.length);
+        return selectedOperations[randomIndex];
+    }
+
+    // Проверка ответа пользователя
+    function checkAnswer(selectedAnswer, correctAnswer) {
+        if (selectedAnswer === correctAnswer) {
+            correctAnswers++;
+            document.body.style.backgroundColor = 'green';  // Зеленый цвет при правильном ответе
+        } else {
+            document.body.style.backgroundColor = 'red';    // Красный цвет при неправильном ответе
+        }
+
+        setTimeout(() => {
+            document.body.style.backgroundColor = '';  // Сбрасываем цвет через 500мс
+            generateQuestion();
+        }, 500);
+
+        totalQuestions++;
+    }
+
+    // Таймер обратного отсчета
+    function startTimer() {
+        let timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('time').textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    // Завершение игры
+    function endGame() {
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('game-over').style.display = 'block';
+        document.getElementById('final-result').textContent = `Игра окончена! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
+    }
+
+    // Начать игру
+    function startGame() {
+        // Собираем выбранные операции
+        selectedOperations = [];
+        const checkboxes = document.querySelectorAll('.operation-select input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedOperations.push(checkbox.value);
+            }
+        });
+
+        // Проверяем, выбраны ли какие-либо операции
+        if (selectedOperations.length === 0) {
+            alert('Выберите хотя бы одну операцию!');
+            return;
+        }
+
+        // Сбрасываем параметры
+        correctAnswers = 0;
+        totalQuestions = 0;
+        timeLeft = 60;
+
+        document.getElementById('menu').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        document.getElementById('game-over').style.display = 'none';
+
+        generateQuestion();
+        startTimer();
+    }
+
+    // Сбросить игру и вернуться к выбору операций
+    function restartGame() {
+        document.getElementById('menu').style.display = 'block';
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('game-over').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
