@@ -3,303 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Математические Примеры</title>
+    <title>Дополненная реальность с QR-кодами</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.1/aframe/build/aframe-ar.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f0f0f0;
-            transition: background-color 0.5s ease;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        .question {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        .options {
-            margin-top: 20px;
-        }
-        button {
-            padding: 15px 25px;
-            margin: 10px 0;
-            width: 200px;
-            font-size: 18px;
-            cursor: pointer;
-            border: none;
-            border-radius: 15px;
-            background-color: #007bff;
-            color: white;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        button:active {
-            background-color: #003d80;
-        }
-        .timer-container {
-            width: 300px;
-            height: 30px;
-            background-color: #ddd;
-            border-radius: 25px;
-            margin: 20px auto;
-            position: relative;
+        body, html {
+            margin: 0;
             overflow: hidden;
         }
-        .timer-fill {
-            height: 100%;
-            background-color: #007bff;
-            border-radius: 25px;
-            transition: width 1s linear;
+        #overlay {
             position: absolute;
             top: 0;
             left: 0;
-        }
-        .timer-text {
-            position: relative;
-            z-index: 1;
-            color: black;
-            font-size: 18px;
-            line-height: 30px;
-        }
-        .result {
-            margin-top: 30px;
-            font-size: 20px;
-        }
-        .operation-select {
-            margin: 10px;
-            font-size: 20px;
-        }
-        label {
-            display: block;
-            margin: 10px 0;
-        }
-        input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        .game-over {
-            margin-top: 30px;
-        }
-        #menu, #game, #game-over {
-            border-radius: 20px;
-            background-color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            display: inline-block;
-            margin: 20px auto;
-        }
-        .end-game-btn {
-            background-color: #dc3545;
-            margin-top: 20px;
-        }
-        .end-game-btn:hover {
-            background-color: #c82333;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            visibility: hidden;
         }
     </style>
 </head>
 <body>
 
-<h1>Математические Примеры</h1>
+<!-- AR-сцена -->
+<a-scene embedded arjs>
+    <!-- Первый QR-код (с ID 1) -->
+    <a-marker preset="custom" type="barcode" value="1">
+        <a-text value="Здравствуйте, добро пожаловать!" position="0 0.5 0" scale="2 2 2" color="red"></a-text>
+    </a-marker>
 
-<div id="menu">
-    <h2>Выберите математические операции</h2>
-    <div class="operation-select">
-        <label><input type="checkbox" value="+" checked> Сложение (+)</label>
-        <label><input type="checkbox" value="-"> Вычитание (-)</label>
-        <label><input type="checkbox" value="*"> Умножение (*)</label>
-        <label><input type="checkbox" value="/"> Деление (/)</label>
-    </div>
-    <button onclick="startGame()">Начать игру</button>
-</div>
+    <!-- Второй QR-код (с ID 2) -->
+    <a-marker preset="custom" type="barcode" value="2">
+        <a-text value="Как доехали?" position="0 0.5 0" scale="2 2 2" color="green"></a-text>
+    </a-marker>
 
-<div id="game" style="display:none;">
-    <div class="timer-container">
-        <div class="timer-fill" id="timer-fill" style="width: 100%;"></div>
-        <div class="timer-text" id="timer-text">60</div> <!-- Отображение времени над заливкой -->
-    </div>
-    <div class="question" id="question"></div>
-    <div class="options" id="options"></div>
-    <div class="result" id="result"></div>
-    <button class="end-game-btn" onclick="endGame(true)">Завершить игру</button>
-</div>
+    <a-entity camera></a-entity>
+</a-scene>
 
-<div id="game-over" class="game-over" style="display:none;">
-    <div id="final-result"></div>
-    <button onclick="restartGame()">Играть снова</button>
-</div>
-
-<script>
-    let correctAnswers = 0;
-    let totalQuestions = 0;
-    let timeLeft = 60;
-    let selectedOperations = [];
-    let timerInterval;
-
-    // Генерация случайного целого числа
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    // Генерация нового примера
-    function generateQuestion() {
-        let num1 = getRandomInt(1, 10);
-        let num2 = getRandomInt(1, 10);
-        let operation = getRandomOperation();
-        let correctAnswer;
-
-        switch (operation) {
-            case '+':
-                correctAnswer = num1 + num2;
-                break;
-            case '-':
-                correctAnswer = num1 - num2;
-                break;
-            case '*':
-                correctAnswer = num1 * num2;
-                break;
-            case '/':
-                num1 = num1 * num2; // Делаем num1 кратным num2
-                correctAnswer = num1 / num2;
-                break;
-        }
-
-        let questionText = `${num1} ${operation} ${num2} = ?`;
-        document.getElementById('question').textContent = questionText;
-
-        let options = [];
-        options.push(correctAnswer);
-
-        // Генерация неверных вариантов
-        while (options.length < 4) {
-            let wrongAnswer = getRandomInt(correctAnswer - 10, correctAnswer + 10);
-            if (!options.includes(wrongAnswer)) {
-                options.push(wrongAnswer);
-            }
-        }
-
-        // Перемешивание вариантов
-        options.sort(() => Math.random() - 0.5);
-
-        // Отображение вариантов ответа стопкой
-        let optionsHtml = '';
-        options.forEach(option => {
-            optionsHtml += `<button onclick="checkAnswer(${option}, ${correctAnswer})">${option}</button><br>`;
-        });
-        document.getElementById('options').innerHTML = optionsHtml;
-    }
-
-    // Получение случайной операции из выбранных пользователем
-    function getRandomOperation() {
-        const randomIndex = Math.floor(Math.random() * selectedOperations.length);
-        return selectedOperations[randomIndex];
-    }
-
-    // Проверка ответа пользователя
-    function checkAnswer(selectedAnswer, correctAnswer) {
-        if (selectedAnswer === correctAnswer) {
-            correctAnswers++;
-            document.body.style.backgroundColor = 'green';  // Зеленый цвет при правильном ответе
-        } else {
-            document.body.style.backgroundColor = 'red';    // Красный цвет при неправильном ответе
-        }
-
-        setTimeout(() => {
-            document.body.style.backgroundColor = '';  // Сбрасываем цвет через 500мс
-            generateQuestion();
-        }, 500);
-
-        totalQuestions++;
-    }
-
-    // Таймер обратного отсчета с изменением ширины полоски и отображением времени
-    function startTimer() {
-        const timerFill = document.getElementById('timer-fill');
-        const timerText = document.getElementById('timer-text');
-        let initialWidth = 100; // Ширина полоски в процентах
-        let intervalTime = 1000; // Интервал в 1 секунду
-
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            initialWidth = (timeLeft / 60) * 100;
-            timerFill.style.width = `${initialWidth}%`;
-            timerText.textContent = timeLeft; // Обновление отображаемого времени
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                endGame(false);
-            }
-        }, intervalTime);
-    }
-
-    // Завершение игры
-    function endGame(manualEnd) {
-        clearInterval(timerInterval);
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('game-over').style.display = 'block';
-        if (manualEnd) {
-            document.getElementById('final-result').textContent = `Вы завершили игру! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
-        } else {
-            document.getElementById('final-result').textContent = `Игра окончена! Количество правильных ответов: ${correctAnswers} из ${totalQuestions}`;
-        }
-    }
-
-    // Запуск игры
-    function startGame() {
-        selectedOperations = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
-        if (selectedOperations.length === 0) {
-            alert('Пожалуйста, выберите хотя бы одну операцию!');
-            return;
-        }
-        correctAnswers = 0;
-        totalQuestions = 0;
-        timeLeft = 60;  // Сбрасываем время на 60 секунд
-        document.getElementById('menu').style.display = 'none';
-        document.getElementById('game').style.display = 'block';
-        generateQuestion();
-        startTimer();
-    }
-
-    // Начать игру
-    function startGame() {
-        // Собираем выбранные операции
-        selectedOperations = [];
-        const checkboxes = document.querySelectorAll('.operation-select input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                selectedOperations.push(checkbox.value);
-            }
-        });
-
-        // Проверяем, выбраны ли какие-либо операции
-        if (selectedOperations.length === 0) {
-            alert('Выберите хотя бы одну операцию!');
-            return;
-        }
-
-        // Сбрасываем параметры
-        correctAnswers = 0;
-        totalQuestions = 0;
-        timeLeft = 60;
-
-        document.getElementById('menu').style.display = 'none';
-        document.getElementById('game').style.display = 'block';
-        document.getElementById('game-over').style.display = 'none';
-
-        generateQuestion();
-        startTimer();
-    }
-
-    // Сбросить игру и вернуться к выбору операций
-    function restartGame() {
-        document.getElementById('menu').style.display = 'block';
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('game-over').style.display = 'none';
-    }
-</script>
+<!-- Оверлей текста при наведении на QR-коды -->
+<div id="overlay"></div>
 
 </body>
 </html>
