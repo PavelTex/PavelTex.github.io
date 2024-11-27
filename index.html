@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квиз по астрономии</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            margin: 10px;
+        }
+        .button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .form-group input {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .timer {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: red;
+        }
+        .options {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Форма для ввода данных пользователя -->
+<div class="container" id="user-form">
+    <h2>Введите данные перед началом квиза</h2>
+    <div class="form-group">
+        <label for="id">ID с сайта движения:</label>
+        <input type="text" id="id" required>
+    </div>
+    <button class="button" id="start-quiz-btn">Начать квиз</button>
+</div>
+
+<!-- Контейнер квиза -->
+<div class="container" id="quiz-container" style="display:none;">
+    <div id="question" class="question"></div>
+    <div id="options" class="options"></div>
+    <div class="timer" id="timer"></div>
+    <div class="button-container">
+        <button class="button" id="next-btn">Следующий вопрос</button>
+    </div>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    const questions = [
+        { question: "Какая планета самая большая в Солнечной системе?", options: ["Земля", "Юпитер", "Марс", "Венера"], answer: "Юпитер" },
+        { question: "Сколько спутников у Марса?", options: ["1", "2", "4", "Нет спутников"], answer: "2" },
+        { question: "Как называется самая яркая звезда ночного неба?", options: ["Сириус", "Полярная звезда", "Вега", "Альдебаран"], answer: "Сириус" },
+        { question: "Какая планета ближе всего к Солнцу?", options: ["Венера", "Земля", "Меркурий", "Марс"], answer: "Меркурий" }
+    ];
+
+    let currentQuestion = 0;
+    let correctAnswersCount = 0;
+    let timer;
+    let timeLeft = 10;
+    let userId;
+
+    // Начать квиз
+    document.getElementById('start-quiz-btn').addEventListener('click', async function () {
+        userId = document.getElementById('id').value;
+        const isValidId = await checkUserId(userId);
+
+        if (isValidId) {
+            document.getElementById('user-form').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            loadQuestion();
+        } else {
+            alert('Ваш ID не найден в базе данных.');
+        }
+    });
+
+    // Обработчик для кнопки "Следующий вопрос"
+    document.getElementById('next-btn').addEventListener('click', function () {
+        const selectedOption = document.querySelector('input[name="option"]:checked');
+        if (selectedOption) {
+            clearInterval(timer);
+            saveAnswer(selectedOption.value);
+            nextQuestion();
+        } else {
+            alert('Пожалуйста, выберите ответ.');
+        }
+    });
+
+    // Функция проверки ID
+    async function checkUserId(userId) {
+        try {
+            const response = await fetch('http://127.0.0.1:5001/check-user-id', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userId })
+            });
+            const data = await response.json();
+            return data.status === 'success';
+        } catch (error) {
+            console.error('Ошибка проверки ID:', error);
+            return false;
+        }
+    }
+
+    function loadQuestion() {
+        if (currentQuestion < questions.length) {
+            document.getElementById('question').innerText = questions[currentQuestion].question;
+            const options = document.getElementById('options');
+            options.innerHTML = '';
+            questions[currentQuestion].options.forEach(option => {
+                options.innerHTML += `<label><input type="radio" name="option" value="${option}"> ${option}</label><br>`;
+            });
+            startTimer();
+        } else {
+            endQuiz();
+        }
+    }
+
+    function startTimer() {
+        timeLeft = 10;
+        document.getElementById('timer').textContent = `Время: ${timeLeft} сек.`;
+
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').textContent = `Время: ${timeLeft} сек.`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                nextQuestion();
+            }
+        }, 1000);
+    }
+
+    function saveAnswer(selectedOption) {
+        const question = questions[currentQuestion].question;
+        const correctOption = questions[currentQuestion].answer;
+        const isCorrect = selectedOption === correctOption;
+
+        if (isCorrect) correctAnswersCount++;
+
+        fetch('http://127.0.0.1:5000/save-answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                question: question,
+                user_answer: selectedOption,
+                correct_answer: correctOption,
+                is_correct: isCorrect
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log('Ответ сохранен:', data))
+        .catch(error => console.error('Ошибка сохранения:', error));
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            endQuiz();
+        }
+    }
+
+    function endQuiz() {
+        clearInterval(timer);
+
+        fetch('http://127.0.0.1:5001/save-result', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                user_id: userId,
+                correct_answers: correctAnswersCount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('quiz-container').innerHTML = `<h2>Квиз завершён!</h2>`;
+        })
+        .catch(error => console.error('Ошибка сохранения итогов:', error));
+    }
+</script>
+</body>
+</html>
