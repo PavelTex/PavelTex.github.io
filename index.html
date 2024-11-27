@@ -53,7 +53,6 @@
 </head>
 <body>
 
-<!-- Форма для ввода данных пользователя -->
 <div class="container" id="user-form">
     <h2>Введите данные перед началом квиза</h2>
     <div class="form-group">
@@ -63,7 +62,6 @@
     <button class="button" id="start-quiz-btn">Начать квиз</button>
 </div>
 
-<!-- Контейнер квиза -->
 <div class="container" id="quiz-container" style="display:none;">
     <div id="question" class="question"></div>
     <div id="options" class="options"></div>
@@ -75,6 +73,8 @@
 </div>
 
 <script>
+    const serverUrl = "http://31.129.106.129:5001";
+
     const questions = [
         { question: "Какая планета самая большая в Солнечной системе?", options: ["Земля", "Юпитер", "Марс", "Венера"], answer: "Юпитер" },
         { question: "Сколько спутников у Марса?", options: ["1", "2", "4", "Нет спутников"], answer: "2" },
@@ -88,7 +88,6 @@
     let timeLeft = 10;
     let userId;
 
-    // Начать квиз
     document.getElementById('start-quiz-btn').addEventListener('click', async function () {
         userId = document.getElementById('id').value;
         const isValidId = await checkUserId(userId);
@@ -102,7 +101,6 @@
         }
     });
 
-    // Обработчик для кнопки "Следующий вопрос"
     document.getElementById('next-btn').addEventListener('click', function () {
         const selectedOption = document.querySelector('input[name="option"]:checked');
         if (selectedOption) {
@@ -114,10 +112,9 @@
         }
     });
 
-    // Функция проверки ID
     async function checkUserId(userId) {
         try {
-            const response = await fetch('http://31.129.106.129:5001/check-user-id', {
+            const response = await fetch(`${serverUrl}/check-user-id`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: userId })
@@ -167,7 +164,7 @@
 
         if (isCorrect) correctAnswersCount++;
 
-        fetch('http://31.129.106.129:5001/save-answer', {
+        fetch(`${serverUrl}/save-answer`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -195,7 +192,7 @@
     function endQuiz() {
         clearInterval(timer);
 
-        fetch('http://31.129.106.129/save-result', {
+        fetch(`${serverUrl}/save-result`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
