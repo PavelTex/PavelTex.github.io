@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Презентация: Экосистема «Сфера»</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Manrope', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .slider-container {
+            width: 100%;
+            height: 100vh;
+            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background-color: transparent;
+        }
+        .slide-content {
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+        }
+        .active .slide-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            filter: blur(100px);
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            animation: move-gradient 20s infinite alternate ease-in-out;
+        }
+        @keyframes move-gradient {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) scale(1.5); }
+        }
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #374151;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        #prev-slide { left: 20px; }
+        #next-slide { right: 20px; }
+        .dots-nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #374151;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dot.active {
+            background-color: #374151;
+        }
+        .rosmol-footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.4);
+            z-index: 15;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 800px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        .border-moveton { border-top: 5px solid #3b82f6; }
+        .border-gran { border-top: 5px solid #10b981; }
+        .border-echo { border-top: 5px solid #8b5cf6; }
+        .metric-value {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+
+    <div style="display: flex; flex-direction: column;" id="slider">
+        
+        <!-- Slide 1: Welcome -->
+        <section class="slide active">
+            <div class="slide-content">
+                <h1 class="text-7xl md:text-9xl font-extrabold text-gray-800 tracking-tighter">СФЕРА</h1>
+                <p class="mt-4 text-2xl md:text-3xl text-blue-600 font-bold">где идеи обретают форму</p>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+        <!-- Slide 2: About Ecosystem -->
+        <section class="slide">
+            <div class="slide-content max-w-4xl">
+                <h2 class="text-3xl md:text-5xl font-bold mb-8 text-gray-800">Наша Экосистема</h2>
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-white/50 p-6 rounded-lg backdrop-blur-sm border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-3 text-blue-600">СФЕРА.БОТ</h3>
+                        <p class="text-gray-600">Технический центр в Telegram. Многофункциональный инструмент для авторов: от создания контента до геймификации и поддержки участников.</p>
+                    </div>
+                    <div class="bg-white/50 p-6 rounded-lg backdrop-blur-sm border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-3 text-blue-600">СФЕРА.КАНАЛ</h3>
+                        <p class="text-gray-600">Информационное сердце экосистемы. Площадка для анонсов, новостей и объединения нашего сообщества.</p>
+                    </div>
+                </div>
+                 <p class="mt-8 text-lg text-gray-700">Наша миссия — создавать пространство, где идеи превращаются в реализованные проекты, получая всестороннюю поддержку.</p>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+        <!-- Slide 3: Project Moveton -->
+        <section class="slide">
+            <div class="slide-content card border-moveton text-left">
+                <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Проект «Моветон»</h3>
+                <p class="text-lg md:text-xl text-blue-600 font-semibold mb-6">Школа культурного мастерства</p>
+                <p class="text-gray-700 text-base md:text-lg">
+                    Мы помогаем подросткам обогатить речь и найти культурную альтернативу ненормативной лексике. Через увлекательную настольную игру и образовательные подкасты мы делаем изучение языка интересным и актуальным.
+                </p>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+        <!-- Slide 4: Moveton Metrics -->
+        <section class="slide">
+            <div class="slide-content card border-moveton w-full max-w-4xl">
+                 <h3 class="text-3xl font-bold text-gray-800 mb-8">«Моветон» в цифрах</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <p class="metric-value text-blue-600" data-target="1000">0</p>
+                        <p class="text-gray-600 font-semibold">Участников</p>
+                    </div>
+                    <div>
+                        <p class="metric-value text-blue-600" data-target="11">0</p>
+                        <p class="text-gray-600 font-semibold">Возраст от 11 до 16 лет</p>
+                    </div>
+                     <div>
+                        <p class="metric-value text-blue-600" data-target="10">0</p>
+                        <p class="text-gray-600 font-semibold">Школ-партнеров</p>
+                    </div>
+                 </div>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+        <!-- Slide 5: Project Gran' -->
+        <section class="slide">
+            <div class="slide-content card border-gran text-left">
+                <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Проект «Грань»</h3>
+                <p class="text-lg md:text-xl text-green-600 font-semibold mb-6">Развлекательно-просветительский комплекс</p>
+                <p class="text-gray-700 text-base md:text-lg">
+                    С помощью динамичной настольной игры мы превращаем математику в захватывающее соревнование, повышая навыки устного счета и критического мышления у школьников.
+                </p>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+        
+        <!-- Slide 6: Gran' Metrics -->
+        <section class="slide">
+            <div class="slide-content card border-gran w-full max-w-4xl">
+                 <h3 class="text-3xl font-bold text-gray-800 mb-8">«Грань» в цифрах</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <p class="metric-value text-green-600" data-target="400">0</p>
+                        <p class="text-gray-600 font-semibold">Участников</p>
+                    </div>
+                    <div>
+                        <p class="metric-value text-green-600" data-target="10">0</p>
+                        <p class="text-gray-600 font-semibold">Возраст от 10 до 14 лет</p>
+                    </div>
+                     <div>
+                        <p class="metric-value text-green-600" data-target="20">0</p>
+                        <p class="text-gray-600 font-semibold">Выездных мероприятий</p>
+                    </div>
+                 </div>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+        <!-- Slide 7: Project Echo -->
+        <section class="slide">
+            <div class="slide-content card border-echo text-left">
+                <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Проект «Эхо»</h3>
+                <p class="text-lg md:text-xl text-purple-600 font-semibold mb-6">Инклюзивный лабиринт</p>
+                <p class="text-gray-700 text-base md:text-lg">
+                   Формируем культуру эмпатии и инклюзии. Участники проходят лабиринт с завязанными глазами, используя уникальное тактильное устройство «Эхо», чтобы лучше понять мир людей с нарушениями зрения.
+                </p>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+        
+        <!-- Slide 8: Echo Metrics -->
+        <section class="slide">
+            <div class="slide-content card border-echo w-full max-w-4xl">
+                 <h3 class="text-3xl font-bold text-gray-800 mb-8">«Эхо» в цифрах</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <p class="metric-value text-purple-600" data-target="500">0</p>
+                        <p class="text-gray-600 font-semibold">Участников</p>
+                    </div>
+                    <div>
+                        <p class="metric-value text-purple-600" data-target="14">0</p>
+                        <p class="text-gray-600 font-semibold">Возраст от 14 до 17 лет</p>
+                    </div>
+                     <div>
+                        <p class="metric-value text-purple-600" data-target="25">0</p>
+                        <p class="text-gray-600 font-semibold">Воркшопов и мероприятий</p>
+                    </div>
+                 </div>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+        
+        <!-- Slide 9: QR Code -->
+        <section class="slide">
+             <div class="slide-content">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800">Присоединяйтесь!</h2>
+                 <p class="max-w-2xl mx-auto text-lg text-gray-600 mb-8">
+                    Наведите камеру, чтобы перейти в наш Telegram-канал и стать частью сообщества «Сферы».
+                 </p>
+                 <div class="bg-white p-4 rounded-lg shadow-lg inline-block">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://t.me/progectteam" alt="QR-код на Telegram-канал">
+                 </div>
+            </div>
+            <div class="rosmol-footer">создано с Росмолодёжь</div>
+        </section>
+
+    </div>
+
+    <button id="prev-slide" class="nav-button">&#10094;</button>
+    <button id="next-slide" class="nav-button">&#10095;</button>
+    <div class="dots-nav" id="dots-nav"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('slider');
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const dotsNav = document.getElementById('dots-nav');
+            let currentSlide = 0;
+
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsNav.appendChild(dot);
+            }
+            const dots = document.querySelectorAll('.dot');
+
+            function animateCounters(slideElement) {
+                const counters = slideElement.querySelectorAll('.metric-value');
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    counter.innerText = '0';
+                    const updateCount = () => {
+                        const count = +counter.innerText;
+                        const increment = target / 200; // Animation speed
+                        if(count < target) {
+                            counter.innerText = `${Math.ceil(count + increment)}`;
+                            requestAnimationFrame(updateCount);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                });
+            }
+
+            function updateSlider() {
+                slider.style.transform = `translateY(-${currentSlide * 100}vh)`;
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                        animateCounters(slide);
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+            }
+
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                updateSlider();
+            }
+
+            document.getElementById('next-slide').addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlider();
+            });
+
+            document.getElementById('prev-slide').addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateSlider();
+            });
+
+            let isWheeling = false;
+            window.addEventListener('wheel', event => {
+                if (isWheeling) return;
+                isWheeling = true;
+                if (event.deltaY > 0) {
+                    currentSlide = Math.min(currentSlide + 1, totalSlides - 1);
+                } else {
+                    currentSlide = Math.max(currentSlide - 1, 0);
+                }
+                updateSlider();
+                setTimeout(() => { isWheeling = false; }, 1000);
+            });
+            
+            updateSlider();
+        });
+    </script>
+</body>
+</html>
