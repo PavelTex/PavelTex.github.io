@@ -15,13 +15,13 @@
             padding: 0;
             overflow: hidden;
             font-family: 'Manrope', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
+            background-color: #E9E8F3;
+            color: #0c0a18;
         }
         .slider-container {
             width: 100%;
             height: 100vh;
-            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         }
         .slide {
             width: 100vw;
@@ -39,12 +39,12 @@
         .slide-content {
             z-index: 10;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px) scale(0.95);
             transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
         }
         .active .slide-content {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
         .gradient-bg {
             position: fixed;
@@ -59,25 +59,26 @@
             position: absolute;
             width: 600px;
             height: 600px;
-            filter: blur(100px);
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            filter: blur(120px);
+            background: linear-gradient(45deg, #a855f7, #60a5fa, #5eead4);
             border-radius: 50%;
             top: 50%;
             left: 50%;
-            animation: move-gradient 20s infinite alternate ease-in-out;
+            animation: move-gradient 30s infinite alternate ease-in-out;
         }
         @keyframes move-gradient {
-            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-            100% { transform: translate(-50%, -50%) rotate(360deg) scale(1.5); }
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1.2); }
+            100% { transform: translate(-50%, -50%) rotate(360deg) scale(0.8); }
         }
         .nav-button {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
             z-index: 20;
-            background: rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: #374151;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #0c0a18;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -88,7 +89,7 @@
             transition: background-color 0.3s;
         }
         .nav-button:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.4);
         }
         #prev-slide { left: 20px; }
         #next-slide { right: 20px; }
@@ -104,32 +105,37 @@
         .dot {
             width: 12px;
             height: 12px;
-            border: 2px solid #374151;
+            border: 2px solid #0c0a18;
             border-radius: 50%;
             cursor: pointer;
             transition: background-color 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(2px);
         }
         .dot.active {
-            background-color: #374151;
+            background-color: #0c0a18;
         }
         .rosmol-footer {
             position: absolute;
-            bottom: 20px;
+            bottom: 60px;
             width: 100%;
             text-align: center;
-            font-size: 0.75rem;
-            color: rgba(0, 0, 0, 0.4);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.5);
             z-index: 15;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
         .card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
             max-width: 800px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
         }
         .border-moveton { border-top: 5px solid #3b82f6; }
         .border-gran { border-top: 5px solid #10b981; }
@@ -160,13 +166,13 @@
             <div class="slide-content max-w-4xl">
                 <h2 class="text-3xl md:text-5xl font-bold mb-8 text-gray-800">Наша Экосистема</h2>
                 <div class="grid md:grid-cols-2 gap-8 text-left">
-                    <div class="bg-white/50 p-6 rounded-lg backdrop-blur-sm border border-gray-200">
+                    <div class="card">
                         <h3 class="text-2xl font-bold mb-3 text-blue-600">СФЕРА.БОТ</h3>
-                        <p class="text-gray-600">Технический центр в Telegram. Многофункциональный инструмент для авторов: от создания контента до геймификации и поддержки участников.</p>
+                        <p class="text-gray-700">Технический центр в Telegram. Многофункциональный инструмент для авторов: от создания контента до геймификации и поддержки участников.</p>
                     </div>
-                    <div class="bg-white/50 p-6 rounded-lg backdrop-blur-sm border border-gray-200">
+                    <div class="card">
                         <h3 class="text-2xl font-bold mb-3 text-blue-600">СФЕРА.КАНАЛ</h3>
-                        <p class="text-gray-600">Информационное сердце экосистемы. Площадка для анонсов, новостей и объединения нашего сообщества.</p>
+                        <p class="text-gray-700">Информационное сердце экосистемы. Площадка для анонсов, новостей и объединения нашего сообщества.</p>
                     </div>
                 </div>
                  <p class="mt-8 text-lg text-gray-700">Наша миссия — создавать пространство, где идеи превращаются в реализованные проекты, получая всестороннюю поддержку.</p>
@@ -248,7 +254,7 @@
                 <h3 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Проект «Эхо»</h3>
                 <p class="text-lg md:text-xl text-purple-600 font-semibold mb-6">Инклюзивный лабиринт</p>
                 <p class="text-gray-700 text-base md:text-lg">
-                   Формируем культуру эмпатии и инклюзии. Участники проходят лабиринт с завязанными глазами, используя уникальное тактильное устройство «Эхо», чтобы лучше понять мир людей с нарушениями зрения.
+                   Формируем культуру эмпатии и инклюзии. Участники проходят лабиринт с завязанными глазами, используя уникальное тактильное устройство, чтобы лучше понять мир людей с нарушениями зрения.
                 </p>
             </div>
             <div class="rosmol-footer">создано с Росмолодёжь</div>
@@ -278,7 +284,7 @@
         
         <!-- Slide 9: QR Code -->
         <section class="slide">
-             <div class="slide-content">
+             <div class="slide-content card">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800">Присоединяйтесь!</h2>
                  <p class="max-w-2xl mx-auto text-lg text-gray-600 mb-8">
                     Наведите камеру, чтобы перейти в наш Telegram-канал и стать частью сообщества «Сферы».
@@ -319,7 +325,7 @@
                     counter.innerText = '0';
                     const updateCount = () => {
                         const count = +counter.innerText;
-                        const increment = target / 200; // Animation speed
+                        const increment = target / 100;
                         if(count < target) {
                             counter.innerText = `${Math.ceil(count + increment)}`;
                             requestAnimationFrame(updateCount);
@@ -371,7 +377,7 @@
                     currentSlide = Math.max(currentSlide - 1, 0);
                 }
                 updateSlider();
-                setTimeout(() => { isWheeling = false; }, 1000);
+                setTimeout(() => { isWheeling = false; }, 1200);
             });
             
             updateSlider();
